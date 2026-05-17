@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CrashSense Live Alerts</title>
+</head>
+
+<body>
+
+    <h1>🚑 CrashSense Live Emergency Alerts</h1>
+
+    <ul id="alerts"></ul>
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+    <script>
+
+        const socket = io("http://localhost:5000");
+
+        socket.on("connect", () => {
+            console.log("Connected to Server");
+        });
+
+        socket.on("newAccident", (data) => {
+
+            console.log("New Accident Alert:", data);
+
+            const alerts = document.getElementById("alerts");
+
+            const li = document.createElement("li");
+
+            li.innerText =
+                `🚨 ${data.location} - Severity: ${data.severity}`;
+
+            alerts.appendChild(li);
+
+        });
+
+        socket.on("emergencyEscalated", (data) => {
+
+            const alerts = document.getElementById("alerts");
+
+            const li = document.createElement("li");
+
+            li.innerText =
+                `⚠ ESCALATED: ${data.accident.location}`;
+
+            alerts.appendChild(li);
+
+        });
+
+    </script>
+
+</body>
+
+</html>
